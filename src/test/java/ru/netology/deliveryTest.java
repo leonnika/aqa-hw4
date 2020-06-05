@@ -168,7 +168,8 @@ public class deliveryTest {
             name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
         }
 
-        @Test   //issue
+        @Test
+            //issue
         void shouldNotSentFormNameOnly() {
             $("[name='name']").setValue("Иванов");
             $$("button").find(exactText("Забронировать")).click();
@@ -176,7 +177,8 @@ public class deliveryTest {
             name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
         }
 
-        @Test   //issue
+        @Test
+            //issue
         void shouldNotSentFormNameDifferentCaseLetters() {
             $("[name='name']").setValue("иВаноВ иВАН");
             $$("button").find(exactText("Забронировать")).click();
@@ -184,7 +186,8 @@ public class deliveryTest {
             name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
         }
 
-        @Test  //issue
+        @Test
+            //issue
         void shouldNotSentFormNameDubleLong() {
             $("[name='name']").setValue("Иванова-Перевозкина-Пограничникова Александра Виктория Валентина");
             $$("button").find(exactText("Забронировать")).click();
@@ -194,7 +197,7 @@ public class deliveryTest {
     }
 
     @Nested
-    class DataOptions {
+    class PhoneOptions {
         private String expected;
 
         @BeforeEach
@@ -232,13 +235,88 @@ public class deliveryTest {
             name.$("[class='input__sub']").shouldHave(exactText(expected));
         }
 
-        @Test  //issue
+        @Test
+            //issue
         void shouldNotSentFormPhoneFist0() {
             $("[name='phone']").setValue("+08989898909");
             $$("button").find(exactText("Забронировать")).click();
             SelenideElement name = $("[data-test-id='phone']");
             name.$("[class='input__sub']").shouldHave(exactText(expected));
         }
+    }
+
+    @Nested
+    class CityOptions {
+        private String expected;
+
+        @BeforeEach
+        void init() {
+            $("[type='tel'][placeholder='Дата встречи']").click();
+            $("[type='tel'][placeholder='Дата встречи']").sendKeys(Keys.SHIFT, Keys.HOME, Keys.DELETE);
+            $("[type='tel'][placeholder='Дата встречи']").setValue(randomDate.format(DateTimeFormatter.ofPattern("dd MM yyyy", new Locale("ru"))));
+            $("[name='name']").setValue("Иванов Иван");
+            $("[name='phone']").setValue("+78787878787");
+            $("[role='presentation']").click();
+        }
+
+        @Test
+        void shouldNotSentFormCityIsNotList() {
+            $("[placeholder='Город']").setValue("Сургут");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement city = $("[data-test-id='city']");
+            city.$("[class='input__sub']").shouldHave(exactText("Доставка в выбранный город недоступна"));
+        }
+
+        @Test
+        void shouldNotSentFormCityNumber() {
+            $("[placeholder='Город']").setValue("565757");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement city = $("[data-test-id='city']");
+            city.$("[class='input__sub']").shouldHave(exactText("Доставка в выбранный город недоступна"));
+        }
+
+        @Test
+        void shouldNotSentFormCitySpecialSymbols() {
+            $("[placeholder='Город']").setValue("#$#$#$");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement city = $("[data-test-id='city']");
+            city.$("[class='input__sub']").shouldHave(exactText("Доставка в выбранный город недоступна"));
+        }
+    }
+
+    @Nested
+    class DataOptions {
+        private String expected;
+
+        @BeforeEach
+        void init() {
+            $("[placeholder='Город']").setValue(randomCity);
+            $("[name='name']").setValue("Иванов Иван");
+            $("[name='phone']").setValue("+78787878787");
+            $("[role='presentation']").click();
+        }
+
+        @Test
+        void shouldNotSentFormDataLetters() {
+            $("[type='tel'][placeholder='Дата встречи']").click();
+            $("[type='tel'][placeholder='Дата встречи']").sendKeys(Keys.SHIFT, Keys.HOME, Keys.DELETE);
+            $("[type='tel'][placeholder='Дата встречи']").setValue("енен");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement date = $("[data-test-id='date']");
+            date.$("[class='input__sub']").shouldHave(exactText("Неверно введена дата"));
+        }
+
+        @Test
+        void shouldNotSentFormDataLessPossible() {
+            date = LocalDate.now();
+            $("[type='tel'][placeholder='Дата встречи']").click();
+            $("[type='tel'][placeholder='Дата встречи']").sendKeys(Keys.SHIFT, Keys.HOME, Keys.DELETE);
+            $("[type='tel'][placeholder='Дата встречи']").setValue(date.format(DateTimeFormatter.ofPattern("dd MM yyyy", new Locale("ru"))));
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement date = $("[data-test-id='date']");
+            date.$("[class='input__sub']").shouldHave(exactText("Заказ на выбранную дату невозможен"));
+        }
+
     }
 
     @Test
