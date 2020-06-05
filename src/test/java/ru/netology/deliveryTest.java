@@ -211,6 +211,7 @@ public class deliveryTest {
         @Test
         void shouldNotSentFormPhoneSpecialSymbols() {
             $("[name='phone']").setValue("^&&&");
+            $$("button").find(exactText("Забронировать")).click();
             SelenideElement name = $("[data-test-id='phone']");
             name.$("[class='input__sub']").shouldHave(exactText(expected));
         }
@@ -218,6 +219,7 @@ public class deliveryTest {
         @Test
         void shouldNotSentFormPhoneFistSymbolNotPlus() {
             $("[name='phone']").setValue("89898989890");
+            $$("button").find(exactText("Забронировать")).click();
             SelenideElement name = $("[data-test-id='phone']");
             name.$("[class='input__sub']").shouldHave(exactText(expected));
         }
@@ -225,6 +227,7 @@ public class deliveryTest {
         @Test
         void shouldNotSentFormPhoneNot11element() {
             $("[name='phone']").setValue("898989");
+            $$("button").find(exactText("Забронировать")).click();
             SelenideElement name = $("[data-test-id='phone']");
             name.$("[class='input__sub']").shouldHave(exactText(expected));
         }
@@ -232,6 +235,7 @@ public class deliveryTest {
 //        @Test
 //        void shouldNotSentFormPhoneFist0() {
 //            $("[name='phone']").setValue("+08989898909");
+//            $$("button").find(exactText("Забронировать")).click();
 //            SelenideElement name = $("[data-test-id='phone']");
 //            name.$("[class='input__sub']").shouldHave(exactText(expected));
 //        }
