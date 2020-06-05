@@ -194,6 +194,14 @@ public class deliveryTest {
             SelenideElement name = $("[data-test-id='name']");
             name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
         }
+
+        @Test
+            //issue
+        void shouldNotSentFormNameletterYO() {
+            $("[name='name']").setValue("Кисилёв Иван");
+            $$("button").find(exactText("Забронировать")).click();
+            $(withText("Успешно!")).waitUntil(visible, 15000);
+        }
     }
 
     @Nested
