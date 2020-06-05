@@ -168,29 +168,29 @@ public class deliveryTest {
             name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
         }
 
-//        @Test
-//        void shouldNotSentFormNameOnly() {
-//            $("[name='name']").setValue("Иванов");
-//            $$("button").find(exactText("Забронировать")).click();
-//            SelenideElement name = $("[data-test-id='name']");
-//            name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
-//        }
-//
-//        @Test
-//        void shouldNotSentFormNameDifferentCaseLetters() {
-//            $("[name='name']").setValue("иВаноВ иВАН");
-//            $$("button").find(exactText("Забронировать")).click();
-//            SelenideElement name = $("[data-test-id='name']");
-//            name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
-//        }
-//
-//        @Test
-//        void shouldNotSentFormNameDubleLong() {
-//            $("[name='name']").setValue("Иванова-Перевозкина-Пограничникова Александра Виктория Валентина");
-//            $$("button").find(exactText("Забронировать")).click();
-//            SelenideElement name = $("[data-test-id='name']");
-//            name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
-//        }
+        @Test   //issue
+        void shouldNotSentFormNameOnly() {
+            $("[name='name']").setValue("Иванов");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement name = $("[data-test-id='name']");
+            name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        }
+
+        @Test   //issue
+        void shouldNotSentFormNameDifferentCaseLetters() {
+            $("[name='name']").setValue("иВаноВ иВАН");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement name = $("[data-test-id='name']");
+            name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        }
+
+        @Test  //issue
+        void shouldNotSentFormNameDubleLong() {
+            $("[name='name']").setValue("Иванова-Перевозкина-Пограничникова Александра Виктория Валентина");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement name = $("[data-test-id='name']");
+            name.$("[class='input__sub']").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+        }
     }
 
     @Nested
@@ -232,13 +232,13 @@ public class deliveryTest {
             name.$("[class='input__sub']").shouldHave(exactText(expected));
         }
 
-//        @Test
-//        void shouldNotSentFormPhoneFist0() {
-//            $("[name='phone']").setValue("+08989898909");
-//            $$("button").find(exactText("Забронировать")).click();
-//            SelenideElement name = $("[data-test-id='phone']");
-//            name.$("[class='input__sub']").shouldHave(exactText(expected));
-//        }
+        @Test  //issue
+        void shouldNotSentFormPhoneFist0() {
+            $("[name='phone']").setValue("+08989898909");
+            $$("button").find(exactText("Забронировать")).click();
+            SelenideElement name = $("[data-test-id='phone']");
+            name.$("[class='input__sub']").shouldHave(exactText(expected));
+        }
     }
 
     @Test
