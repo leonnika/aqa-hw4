@@ -342,11 +342,12 @@ public class deliveryTest {
 
     @Test
     void shouldSentUseListCity() {
-        searchStringForListCity = "ка";
+        String searchCityForListCity = "Казань";
+        searchStringForListCity= searchCityForListCity.substring(0,2);
         $("[placeholder='Город']").setValue(searchStringForListCity);
         $("[class='popup popup_direction_bottom-left popup_target_anchor popup_size_m popup_visible popup_height_adaptive popup_theme_alfa-on-white input__popup']").waitUntil(visible, 15000);
         SelenideElement list = $("[class='popup popup_direction_bottom-left popup_target_anchor popup_size_m popup_visible popup_height_adaptive popup_theme_alfa-on-white input__popup']");
-        list.$(withText(searchStringForListCity)).click();
+        list.$(withText(searchCityForListCity)).click();
         $("[type='tel'][placeholder='Дата встречи']").click();
         $("[type='tel'][placeholder='Дата встречи']").sendKeys(Keys.SHIFT, Keys.HOME, Keys.DELETE);
         $("[type='tel'][placeholder='Дата встречи']").setValue(randomDate.format(DateTimeFormatter.ofPattern("dd MM yyyy", new Locale("ru"))));
@@ -357,17 +358,48 @@ public class deliveryTest {
         $(withText("Успешно!")).waitUntil(visible, 15000);
     }
 
-    @Test
-    void shouldSentUseDateFromCalendar() {
-        $("[placeholder='Город']").setValue(randomCity);
-        $("[name='phone']").setValue("+78787878787");
-        $("[type='tel'][placeholder='Дата встречи']").click();
-        $("[class='icon-button icon-button_size_m icon-button_theme_alfa-on-white']").click();
-        $("[class='popup popup_direction_bottom-left popup_target_anchor popup_size_s popup_visible popup_padded popup_theme_alfa-on-white']").waitUntil(visible, 4500);
-        $$("[data-day]").first(intervalDeliveryForCalendar).last().click();
-        $("[role='presentation']").click();
-        $("[name='name']").setValue("Иванов Иван");
-        $$("button").find(exactText("Забронировать")).click();
-        $(withText("Успешно!")).waitUntil(visible, 15000);
+    @Nested
+    class CalendarOptions {
+
+        @BeforeEach
+        void init() {
+            $("[role='presentation']").click();
+            $("[name='name']").setValue("Иванов Иван");
+            $("[placeholder='Город']").setValue(randomCity);
+            $("[name='phone']").setValue("+78787878787");
+            $("[type='tel'][placeholder='Дата встречи']").click();
+            $("[class='icon-button icon-button_size_m icon-button_theme_alfa-on-white']").click();
+            $("[class='popup popup_direction_bottom-left popup_target_anchor popup_size_s popup_visible popup_padded popup_theme_alfa-on-white']").waitUntil(visible, 4500);
+        }
+
+        @Test
+        void shouldSentUseDateFromCalendarInWeek() {
+            $$("[data-day]").first(intervalDeliveryForCalendar).last().click();
+            $$("button").find(exactText("Забронировать")).click();
+            $(withText("Успешно!")).waitUntil(visible, 15000);
+        }
+
+        @Test
+        void shouldSentUseDateFromCalendarAnyDatePlan() {
+            int i = 0;
+            String datePlanStr = "02.10.2025";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            LocalDate datePlan = LocalDate.parse(datePlanStr, formatter);
+            String daysInterval = Integer.toString(datePlan.getDayOfMonth());
+            int monthsInterval = datePlan.getMonthValue() - date.getMonthValue();
+            int yearInterval = datePlan.getYear() - date.getYear();
+            while (i < yearInterval) {
+                $("[class='calendar__arrow calendar__arrow_direction_right calendar__arrow_double']").click();
+                i++;
+            }
+            i = 0;
+            while (i < monthsInterval) {
+                $("[class='calendar__arrow calendar__arrow_direction_right']").click();
+                i++;
+            }
+            $$("[data-day]").find(exactText(daysInterval)).click();
+            $$("button").find(exactText("Забронировать")).click();
+            $(withText("Успешно!")).waitUntil(visible, 15000);
+        }
     }
-}
+ }
